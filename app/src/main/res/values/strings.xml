@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Your AP</string>
+    <string name="xposed_description">Make your hotspot ip range to be static</string>
+</resources>

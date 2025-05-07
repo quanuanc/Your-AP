@@ -10,7 +10,7 @@ Make your android phone more suitable for hotspot access
 
 ## Supported OS
 - Android 12-16 Beta 3
-- Tested in OxygenOS 15(Android 15)
+- Tested in OxygenOS 15(Android 15), [KernelSU](https://kernelsu.org) + [Zygisk Next](https://github.com/Dr-TSNG/ZygiskNext) + [LSPosed](https://github.com/JingMatrix/LSPosed)
 
 ## Usage
 1. Enable the module

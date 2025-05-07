@@ -1,6 +1,5 @@
 package dev.cheng.yourap;
 
-import android.annotation.SuppressLint;
 import android.net.LinkAddress;
 
 import java.lang.reflect.Constructor;
@@ -14,7 +13,7 @@ import io.github.libxposed.api.XposedModule;
 import io.github.libxposed.api.annotations.BeforeInvocation;
 import io.github.libxposed.api.annotations.XposedHooker;
 
-@SuppressLint({"PrivateApi", "BlockedPrivateApi"})
+@SuppressWarnings({"PrivateApi", "BlockedPrivateApi", "JavaReflectionMemberAccess"})
 public class ModuleEntry extends XposedModule {
     private static XposedModule module;
     private static final String LOG_PREFIX = "[Your AP] ";
@@ -48,8 +47,8 @@ public class ModuleEntry extends XposedModule {
         try {
             startHook(param);
         } catch (ClassNotFoundException e) {
-            log(LOG_PREFIX + "Cannot load " + "[" + TARGET_CLASS + "] in Pcakge: " + "[" + pn +
-                    "], Skip.");
+            log(LOG_PREFIX + "Cannot load " + "[" + TARGET_CLASS + "] in package: "
+                    + "[" + pn + "], Skip.");
         }
     }
 

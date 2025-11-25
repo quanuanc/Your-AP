@@ -16,7 +16,6 @@ import io.github.libxposed.api.annotations.XposedHooker;
 @SuppressWarnings({"PrivateApi", "BlockedPrivateApi", "JavaReflectionMemberAccess"})
 public class ModuleEntry extends XposedModule {
     private static XposedModule module;
-    private static final String LOG_PREFIX = "[Your AP] ";
 
     // Reflection
     private static final String TARGET_CLASS = "android.net.ip.IpServer";
@@ -43,12 +42,11 @@ public class ModuleEntry extends XposedModule {
     public void onPackageLoaded(PackageLoadedParam param) {
         String pn = param.getPackageName();
 
-        log(LOG_PREFIX + "Package loaded: " + pn);
+        log(String.format("package loaded: %s", pn));
         try {
             startHook(param);
         } catch (ClassNotFoundException e) {
-            log(LOG_PREFIX + "Cannot load " + "[" + TARGET_CLASS + "] in package: "
-                    + "[" + pn + "], Skip.");
+            log(String.format("cannot load [ %s ] in package: [ %s ], Skip.", TARGET_CLASS, pn));
         }
     }
 
@@ -56,7 +54,7 @@ public class ModuleEntry extends XposedModule {
         ClassLoader classLoader = param.getClassLoader();
         Class<?> targetClass = classLoader.loadClass(TARGET_CLASS);
         if (targetClass == null) {
-            log(LOG_PREFIX + "Class not found: " + TARGET_CLASS);
+            log(String.format("class not found: %s", TARGET_CLASS));
             return;
         }
         Method method;
@@ -64,11 +62,11 @@ public class ModuleEntry extends XposedModule {
             // requestIpv4Address(final int scope, final boolean useLastAddress)
             method = targetClass.getDeclaredMethod(TARGET_METHOD, TARGET_METHOD_PARAM);
         } catch (NoSuchMethodException e) {
-            log(LOG_PREFIX + "Method not found: " + TARGET_METHOD);
+            log(String.format("method not found: %s", TARGET_METHOD));
             return;
         }
 
-        log(LOG_PREFIX + "Hooking method: " + method.getName());
+        log(String.format("hooking method: %s", method.getName()));
         hook(method, MyHooker.class);
     }
 
@@ -76,7 +74,7 @@ public class ModuleEntry extends XposedModule {
     private static class MyHooker implements Hooker {
         @BeforeInvocation
         public static void before(BeforeHookCallback callback) {         // Pre-hooking
-            module.log(LOG_PREFIX + "Invoke hooker before method");
+            module.log("invoke hooker before method");
             Class<?> targetClass = callback.getMember().getDeclaringClass();
             int type = -1;
             try {
@@ -84,14 +82,14 @@ public class ModuleEntry extends XposedModule {
                 declaredField.setAccessible(true);
                 type = declaredField.getInt(callback.getThisObject());
             } catch (NoSuchFieldException | IllegalAccessException e) {
-                module.log(LOG_PREFIX + "Exception in get field", e);
+                module.log("exception in get field", e);
             }
             Config config = CONFIG.get(type);
             if (config == null) {
-                module.log(LOG_PREFIX + "Cannot find config for interfaceType [" + type + "]");
+                module.log(String.format("type: %s not found in config", type));
                 return;
             }
-            module.log(LOG_PREFIX + "Detect interface [" + config.tetheringName + "]");
+            module.log(String.format("detect interface [ %s ]", config.tetheringName));
             String ipRange = config.ipRange;
             LinkAddress result;
             try {
@@ -100,11 +98,14 @@ public class ModuleEntry extends XposedModule {
                 result = constructor.newInstance(ipRange);
             } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException |
                      InstantiationException e) {
-                module.log(LOG_PREFIX + "Exception while instance LinkAddress", e);
+                module.log("exception while instance LinkAddress", e);
                 return;
             }
             callback.returnAndSkip(result);
-            module.log(LOG_PREFIX + "Success");
+            module.log(String.format("success set [ %s ] for [ %s ]",
+                    config.ipRange,
+                    config.tetheringName)
+            );
         }
 
     }

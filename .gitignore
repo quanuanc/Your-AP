@@ -14,3 +14,8 @@
 .cxx
 local.properties
 /.idea/*
+/app/.classpath
+/app/.project
+/.project
+/.settings/org.eclipse.buildship.core.prefs
+/app/.settings/org.eclipse.buildship.core.prefs

@@ -25,11 +25,7 @@ public class ModuleEntry extends XposedModule {
 
     // Config
     private static final Map<Integer, Config> CONFIG = Map.of(
-            0, new Config("TETHERING_WIFI", "192.168.55.1/24"),
-            1, new Config("TETHERING_USB", "192.168.55.1/24"),
-            2, new Config("TETHERING_BLUETOOTH", "192.168.55.1/24"),
-            3, new Config("TETHERING_WIFI_P2P", "192.168.55.1/24"),
-            4, new Config("TETHERING_NCM", "192.168.55.1/24"),
+            0, new Config("TETHERING_WIFI", "192.168.54.1/24"),
             5, new Config("TETHERING_ETHERNET", "192.168.55.1/24")
     );
 

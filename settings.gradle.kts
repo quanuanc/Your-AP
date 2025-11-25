@@ -26,4 +26,10 @@ dependencyResolutionManagement {
 
 rootProject.name = "Your AP"
 include(":app")
+
+includeBuild("libxposed/api") {
+    dependencySubstitution {
+        substitute(module("io.github.libxposed:api")).using(project(":api"))
+    }
+}
  
